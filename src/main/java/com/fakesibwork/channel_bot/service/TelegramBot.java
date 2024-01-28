@@ -2,7 +2,6 @@ package com.fakesibwork.channel_bot.service;
 
 import com.fakesibwork.channel_bot.config.BotConfig;
 import com.fakesibwork.channel_bot.repo.UserRepo;
-import com.tecknobit.telegrammanager.botapi.managers.identifiers.chat.ChatManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -72,10 +71,10 @@ public class TelegramBot extends TelegramLongPollingBot {
             long userId = update.getChatJoinRequest().getUserChatId();
 
             // Approve request
+            ApproveChatJoinRequest approveChatJoinRequest = new ApproveChatJoinRequest(chatId, userId);
             try {
-                ChatManager chatManager = new ChatManager(getBotToken());
-                chatManager.approveChatJoinRequest(chatId, userId);
-            } catch (Exception e) {
+                this.execute(approveChatJoinRequest);
+            } catch (TelegramApiException e) {
                 throw new RuntimeException(e);
             }
 
